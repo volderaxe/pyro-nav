@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pyro Nav // Station Operations</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+ <div class="brand"><div class="mark">SC</div><div><h1>PYRO NAV // OPERATIONS</h1><small>STATION TRACKING & ROUTE CONTROL</small></div></div>
+ <div class="topright"><span class="pulse"></span><span class="liveword">LOCAL DATABASE ONLINE</span><span id="clock">--:--:--</span></div>
+</header>
+<main>
+ <aside class="sidebar">
+  <div class="navlabel">OPERATIONS</div>
+  <button class="navbtn active" data-page="overview">◈ &nbsp; Overview</button>
+  <button class="navbtn" data-page="stations">▦ &nbsp; Stations <span id="navCount">12</span></button>
+  <button class="navbtn" data-page="routes">⌁ &nbsp; Route Planner</button>
+  <button class="navbtn" data-page="distances">↔ &nbsp; Distance Matrix</button>
+  <div class="sidefoot">PYRO SYSTEM<br><span style="color:var(--cyan)">NAV DATA // LOCAL SAVE</span><br><br>Progress is saved in this browser.</div>
+ </aside>
+ <section class="content">
+  <div id="persistenceWarning" class="persistence-warning" role="alert" hidden></div>
+  <div id="overviewPage">
+   <div class="titleline"><div><div class="eyebrow">Flight operations / Pyro</div><h2>Station Overview</h2><p>Track visits. Find the next stop. Keep your route under control.</p></div><div class="actions"><button onclick="showPage('routes')">Route planner</button><button onclick="openStationModal()">＋ Add Station</button><button class="primary" onclick="openRouteModal()">＋ Create Route</button></div></div>
+   <div class="cards">
+    <div class="stat"><label>TOTAL STATIONS</label><strong id="statTotal">12</strong></div>
+    <div class="stat"><label>VISITED STATIONS</label><strong class="green" id="statDone">12</strong></div>
+    <div class="stat"><label>UNVISITED STATIONS</label><strong class="cyan" id="statRemaining">0</strong></div>
+    <div class="stat"><label>ACTIVE ROUTES</label><strong id="statRoutes">0</strong></div>
+   </div>
+   <div class="grid2">
+    <div class="panel">
+     <div class="panelhead"><h3>Navigation solution</h3><span class="tag">LOCAL POSITION</span></div>
+     <div class="locationbox"><label>SET YOUR CURRENT STATION</label><div class="locationrow"><select id="currentSelect" onchange="setCurrent(this.value)"></select><button class="primary" onclick="setCurrent(document.getElementById('currentSelect').value)">Set</button></div></div>
+     <div class="recommend"><div><small class="muted">CLOSEST UNVISITED STATION</small><strong id="closestName">All stations visited</strong><small id="closestSub">Add a station or reset a status to begin.</small></div><div class="distance" id="closestDistance">—</div></div>
+     <div class="recommend"><div><small class="muted">FOCUSED ROUTE NEXT STOP</small><strong id="nextName">No focused route</strong><small id="nextSub">Create or focus a route to follow its stops.</small></div><div class="overview-route-actions"><select id="overviewRouteSelect" aria-label="Select focused route" onchange="focusRoute(this.value)"></select><button onclick="goRoutes()">Route planner</button></div></div>
+     <div class="note">Distance figures use a community Pyro station-to-station table where available. They are straight-line/in-system distance estimates, not live quantum travel time. Unknown distances are shown as unavailable.</div>
+    </div>
+    <div class="panel">
+     <div class="panelhead"><h3>Route visit completion</h3><span class="tag" id="completionPct">0%</span></div>
+     <div style="font-size:34px;letter-spacing:1px" id="completionBig">0<span style="font-size:14px;color:var(--muted)"> / 0 stops</span></div>
+     <div class="progress"><div id="completionBar"></div></div>
+     <div class="muted route-rollup-caption" id="routeRollupCaption">Track progress across your saved routes.</div>
+     <div class="overview-route-cards" id="overviewRouteCards"></div>
+     <div class="actions" style="margin-top:15px"><button onclick="showPage('routes')">Manage routes</button><button class="primary" onclick="openRouteModal()">＋ Create Route</button></div>
+    </div>
+   </div>
+   <div class="panel"><div class="panelhead"><h3>Focused route stop status</h3><button onclick="showPage('routes')">Open route planner →</button></div><div id="feed"></div><details class="excluded-stations"><summary id="excludedSummary">Not on this route</summary><div id="excludedFeed"></div></details><div class="note">Visited status here follows the focused route. Stations not on this route are hidden above until expanded.</div></div>
+  </div>
+  <div id="stationsPage" class="hidden">
+   <div class="titleline"><div><div class="eyebrow">Registry / location records</div><h2>Station Registry</h2><p>Manage station status and keep freight elevator locations categorized separately.</p></div><div class="actions"><button onclick="exportData()">Export data</button><button onclick="document.getElementById('backupFile').click()">Import backup</button><input id="backupFile" type="file" accept="application/json,.json" hidden onchange="importBackup(this.files[0]);this.value=''"><button class="primary" onclick="openStationModal()">＋ Add Station</button></div></div>
+   <div class="panel"><div class="toolbar"><input id="stationSearch" placeholder="Search station names..." oninput="renderStations()"><select id="stationFilter" onchange="renderStations()"><option value="all">All stations</option><option value="external">External freight elevators</option><option value="regular">Regular stations</option><option value="todo">Not visited</option><option value="done">Visited</option></select><select id="sortSelect" onchange="renderStations()"><option value="name">Sort: Name</option><option value="status">Sort: Status</option><option value="type">Sort: Category</option></select></div><div id="stationList"></div></div>
+  </div>
+  <div id="routesPage" class="hidden">
+   <div class="titleline"><div><div class="eyebrow">Flight planning / saved itineraries</div><h2>Route Planner</h2><p>Create multiple routes, select stations, and choose your own stop order.</p></div><div class="actions"><button class="primary" onclick="openRouteModal()">＋ Create Route</button></div></div>
+   <div class="grid2"><div class="panel"><div class="panelhead"><h3>Saved routes</h3><span class="tag" id="routeCountTag">0 ROUTES</span></div><div id="routeCards"></div></div><div class="panel"><div class="panelhead"><h3>Focused route manifest</h3><span class="tag">STOP ORDER</span></div><div id="activeRoutePanel"></div></div></div>
+  </div>
+  <div id="distancesPage" class="hidden">
+   <div class="titleline"><div><div class="eyebrow">Navigation data / reference</div><h2>Distance Matrix</h2><p>Estimated station-to-station distances from a community Pyro reference table.</p></div><div class="actions"><button onclick="openDistanceModal()">＋ Edit distance</button></div></div>
+   <div class="panel"><div class="toolbar"><input id="distanceSearch" placeholder="Filter station..." oninput="renderMatrix()"><span class="muted" style="font-size:11px">Use matrix to compare locations; missing entries can be added manually.</span></div><div id="matrixWrap" style="overflow:auto"></div></div>
+  </div>
+ </section>
+</main>
+<footer><span>PYRO NAV // FAN-MADE PERSONAL TRACKER</span><span>Not affiliated with Cloud Imperium Games. Station distance data is community-sourced and may be approximate.</span></footer>
+<div class="modal" id="stationModal"><div class="modalbox"><h3 id="stationModalTitle">Add station</h3><p>Add or update a location record.</p><form id="stationForm"><input type="hidden" id="editStationId"><div class="field"><label>STATION NAME</label><input id="stationName" required maxlength="80" placeholder="e.g. Ruin Station"></div><div class="formrow"><div class="field"><label>CATEGORY</label><select id="stationType"><option value="external">External freight elevator</option><option value="regular">Regular station</option></select></div><div class="field"><label>VISIT STATUS</label><select id="stationStatus"><option value="todo">Not visited</option><option value="done">Visited</option></select></div></div><div class="field"><label>OPTIONAL NOTES</label><input id="stationNotes" maxlength="180" placeholder="System, location details, reminders..."></div><div class="modalactions"><button type="button" onclick="closeModal('stationModal')">Cancel</button><button class="primary" type="submit">Save station</button></div></form></div></div>
+<div class="modal" id="routeModal"><div class="modalbox"><h3>Create route</h3><p>Select the stations to include, then arrange their order after saving.</p><form id="routeForm"><div class="field"><label>ROUTE NAME</label><input id="routeName" required maxlength="80" placeholder="e.g. External Elevator Sweep"></div><div class="formrow"><div class="field"><label>STATION CATEGORY</label><select id="routeTypeFilter" onchange="renderRoutePicks()"><option value="all">Both categories</option><option value="external">External freight elevators</option><option value="regular">Regular stations</option></select></div><div class="field"><label>STARTING POINT (OPTIONAL)</label><select id="routeStart"></select></div></div><div class="field"><label>SELECT STOPS</label><div class="routepick" id="routePicks"></div></div><div class="modalactions"><button type="button" onclick="closeModal('routeModal')">Cancel</button><button class="primary" type="submit">Create route</button></div></form></div></div>
+<div class="modal" id="distanceModal"><div class="modalbox"><h3>Add or edit distance</h3><p>Enter a distance between two stations. The value is saved locally and used for closest-station suggestions.</p><form id="distanceForm"><div class="field"><label>FROM STATION</label><select id="distanceFrom"></select></div><div class="field"><label>TO STATION</label><select id="distanceTo"></select></div><div class="field"><label>DISTANCE (COMMUNITY UNIT)</label><input id="distanceValue" type="number" min="0" step="0.01" required placeholder="e.g. 27.99"></div><div class="modalactions"><button type="button" onclick="closeModal('distanceModal')">Cancel</button><button class="primary" type="submit">Save distance</button></div></form></div></div>
+<script src="app.js"></script>
+</body>
+</html>
