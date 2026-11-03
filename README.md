@@ -25,6 +25,9 @@ The public browser version is available at [https://volderaxe.github.io/pyro-nav
 - Route manifests always show departure from Ruin and a required return to Ruin
 - Route distance estimates include the Ruin return leg and flag unknown distances
 - Per-route haul-run checklist for departure, stop completion, return, and fresh runs without deleting the route
+- Searchable route setup with large, full-row station selectors
+- Overview action to complete the current station as the focused route's next stop
+- Recent-improvements notice and feature request form that prepares an email draft
 - Distance matrix and manually editable distances
 - Browser local-storage persistence, JSON export, and validated backup restore
 
@@ -35,6 +38,8 @@ The public browser version is available at [https://volderaxe.github.io/pyro-nav
 - The overview's station status list follows the focused route: incomplete route stops show **Not visited**, completed stops show **Visited**, and stations outside that route are tucked into a collapsed **Not on this route** section.
 - Overview route completion aggregates completed stop instances across every saved route and provides per-route active/paused state, progress, next-stop/return-leg status, **Focus**, **Activate/Pause**, and **Plan route** actions. Registry visit totals remain separate so completing the same station on different routes is tracked accurately per route.
 - Starting a haul run activates only that route; completing its return to Ruin pauses only that route. Pausing preserves its progress, and a completed run can be restarted with **Start fresh run**.
+- The overview's **Complete current route stop** action is enabled when your selected current station is the focused active route's next stop and its haul run has started.
+- Feature requests open a prefilled message in the visitor's default email app. The visitor reviews and sends the email; the app does not submit requests in the background.
 - Distance estimates are community reference values and may be approximate; unknown distances show as unavailable.
 - Data is saved in the current browser profile. Use **Export data** to back up your records.
 - Import a JSON backup from the Station Registry. The app validates it before replacing saved data and reports errors without changing the current records.
