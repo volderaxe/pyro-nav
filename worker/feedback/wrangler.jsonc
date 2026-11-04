@@ -6,7 +6,10 @@
   "compatibility_date": "2026-11-04",
   "workers_dev": true,
   "vars": {
-    "ALLOWED_ORIGINS": "https://volderaxe.github.io"
+    "ALLOWED_ORIGINS": "https://volderaxe.github.io",
+    "GITHUB_OAUTH_CLIENT_ID": "Ov23liWZE5X7vmhxjFA8",
+    "OWNER_GITHUB_LOGIN": "volderaxe",
+    "OWNER_APP_URL": "https://volderaxe.github.io/pyro-nav/"
   },
   "d1_databases": [
     {

@@ -29,7 +29,7 @@ The public browser version is available at [https://volderaxe.github.io/pyro-nav
 - Fresh station trackers begin with zero visited locations (Ruin is the home base, not a counted visit); the overview's visited count reflects unique stops completed in haul runs still in progress
 - Searchable route setup with large, full-row station selectors
 - Overview action to complete the current station as the focused route's next stop
-- Recent-improvements notice and private in-app feature-request inbox (Cloudflare Worker + D1 setup required)
+- Recent-improvements notice and private feature-request inbox with GitHub owner sign-in (Cloudflare Worker + D1 setup required)
 - Distance matrix and manually editable distances
 - Browser local-storage persistence, JSON export, and validated backup restore
 
@@ -44,7 +44,7 @@ The public browser version is available at [https://volderaxe.github.io/pyro-nav
 - If a run needs an early cargo drop, select your current station and choose **Pit stop at [delivery station]** in the focused route checklist. This records the partial drop, moves the tracker location to the configured delivery station, and preserves completed stops. Choose **Continue route from [delivery station]** when ready to resume; route stops must still be completed in order.
 - New installs start with zero visited stations; Ruin Station is excluded from the visited/unvisited counters. Previously saved data is preserved, except the old untouched all-visited starter data is migrated to the new zero-visited defaults. Completing a route stop updates station visit status and the live run total; finishing or canceling a run resets its contribution to the overview total.
 - The overview's **Complete current route stop** action is enabled when your selected current station is the focused active route's next stop and its haul run has started.
-- Feature requests go to the private Pyro Nav inbox without requiring an account or email when the Cloudflare feedback API is configured. The app does not open an email client, publish requests, or store submitter IP addresses in D1; Cloudflare processes connection metadata for rate limiting. See [`worker/feedback/README.md`](worker/feedback/README.md) for setup and API details. If the API is unavailable, the app reports the failure and keeps the request draft.
+- Feature requests go to the private Pyro Nav inbox without requiring submitters to create an account or provide an email. The owner signs in with the authorized GitHub account; owner tools include inbox counts, status filters, and marking requests reviewed. The app does not open an email client, publish requests, or store submitter IP addresses in D1; Cloudflare processes connection metadata for rate limiting. See [`worker/feedback/README.md`](worker/feedback/README.md) for setup and API details. If the API is unavailable, the app reports the failure and keeps the request draft.
 - Distance estimates are community reference values and may be approximate; unknown distances show as unavailable.
 - Data is saved in the current browser profile. Use **Export data** to back up your records.
 - Import a JSON backup from the Station Registry. The app validates it before replacing saved data and reports errors without changing the current records.

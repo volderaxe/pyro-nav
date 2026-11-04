@@ -23,6 +23,6 @@ jobs:
           command: deploy
           preCommands: npx wrangler d1 migrations apply pyro-nav-feedback --remote
           secrets: |
-            ADMIN_TOKEN
+            PYRONAV_OAUTH_CLIENT_SECRET
         env:
-          ADMIN_TOKEN: ${{ secrets.FEEDBACK_ADMIN_TOKEN }}
+          PYRONAV_OAUTH_CLIENT_SECRET: ${{ secrets.PYRONAV_OAUTH_CLIENT_SECRET }}
