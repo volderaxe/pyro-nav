@@ -24,11 +24,11 @@
   <div id="persistenceWarning" class="persistence-warning" role="alert" hidden></div>
   <div id="overviewPage">
    <div class="titleline"><div><div class="eyebrow">Flight operations / Pyro</div><h2>Station Overview</h2><p>Track visits. Find the next stop. Keep your route under control.</p></div><div class="actions"><button onclick="showPage('routes')">Route planner</button><button onclick="openStationModal()">＋ Add Station</button><button class="primary" onclick="openRouteModal()">＋ Create Route</button></div></div>
-   <details class="notice-panel" open><summary><span><span class="eyebrow">PILOT NOTICE</span><strong>Recent improvements</strong></span><span class="notice-count">4 UPDATES</span></summary><ul><li>Search stations by name while creating a route; click the station name or row to select it.</li><li>Track multiple active routes independently for separate ships.</li><li>Mark the focused route's next stop complete right from the overview when you arrive.</li><li>Route progress, return-to-Ruin tracking, and backup protection stay in sync.</li></ul></details>
+   <details class="notice-panel" open><summary><span><span class="eyebrow">PILOT NOTICE</span><strong>Recent improvements</strong></span><span class="notice-count">5 UPDATES</span></summary><ul><li>Search stations by name while creating a route; click the station name or row to select it.</li><li>Track multiple active routes independently for separate ships.</li><li>Mark the focused route's next stop complete right from the overview when you arrive.</li><li>Record an early cargo drop at Ruin and continue the same route later without losing stop progress.</li><li>New station trackers start at zero visits, and route completions update station visit status.</li></ul></details>
    <div class="cards">
     <div class="stat"><label>TOTAL STATIONS</label><strong id="statTotal">12</strong></div>
-    <div class="stat"><label>VISITED STATIONS</label><strong class="green" id="statDone">12</strong></div>
-    <div class="stat"><label>UNVISITED STATIONS</label><strong class="cyan" id="statRemaining">0</strong></div>
+    <div class="stat"><label>VISITED STATIONS</label><strong class="green" id="statDone">0</strong></div>
+    <div class="stat"><label>UNVISITED STATIONS</label><strong class="cyan" id="statRemaining">12</strong></div>
     <div class="stat"><label>ACTIVE ROUTES</label><strong id="statRoutes">0</strong></div>
    </div>
    <div class="grid2">

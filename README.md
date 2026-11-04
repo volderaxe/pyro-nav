@@ -25,6 +25,8 @@ The public browser version is available at [https://volderaxe.github.io/pyro-nav
 - Route manifests always show departure from Ruin and a required return to Ruin
 - Route distance estimates include the Ruin return leg and flag unknown distances
 - Per-route haul-run checklist for departure, stop completion, return, and fresh runs without deleting the route
+- Record early cargo drops at Ruin during a haul and continue the same route later with stop progress preserved
+- Fresh station trackers begin with zero visited locations (Ruin is the home base, not a counted visit); completing route stops updates station visit status
 - Searchable route setup with large, full-row station selectors
 - Overview action to complete the current station as the focused route's next stop
 - Recent-improvements notice and feature request form that prepares an email draft
@@ -38,6 +40,8 @@ The public browser version is available at [https://volderaxe.github.io/pyro-nav
 - The overview's station status list follows the focused route: incomplete route stops show **Not visited**, completed stops show **Visited**, and stations outside that route are tucked into a collapsed **Not on this route** section.
 - Overview route completion aggregates completed stop instances across every saved route and provides per-route active/paused state, progress, next-stop/return-leg status, **Focus**, **Activate/Pause**, and **Plan route** actions. Registry visit totals remain separate so completing the same station on different routes is tracked accurately per route.
 - Starting a haul run activates only that route; completing its return to Ruin pauses only that route. Pausing preserves its progress, and a completed run can be restarted with **Start fresh run**.
+- If a run needs an early cargo drop, select your current station and choose **Early drop at Ruin** in the focused route checklist. This records the partial drop, returns the tracker location to Ruin, and preserves completed stops. Choose **Continue route from Ruin** when ready to resume; route stops must still be completed in order.
+- New installs start with zero visited stations; Ruin Station is excluded from the visited/unvisited counters. Previously saved data is preserved, except the old untouched all-visited starter data is migrated to the new zero-visited defaults. Marking your current location or completing a route stop updates the station registry and overview totals.
 - The overview's **Complete current route stop** action is enabled when your selected current station is the focused active route's next stop and its haul run has started.
 - Feature requests open a prefilled message in the visitor's default email app. The visitor reviews and sends the email; the app does not submit requests in the background.
 - Distance estimates are community reference values and may be approximate; unknown distances show as unavailable.
