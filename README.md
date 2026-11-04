@@ -9,7 +9,7 @@ A browser-based Star Citizen-inspired station tracker and cargo route planner.
 3. Choose **File → Open Folder…** and select `pyro-nav-vscode`.
 4. Open `index.html` in a browser. For easier development, install the **Live Server** extension, right-click `index.html`, and choose **Open with Live Server**.
 
-No Node.js or build step is required for this version.
+No Node.js or build step is required to run the browser app. The optional feedback API in `worker/feedback/` uses Cloudflare Workers and D1.
 
 ## Open the hosted app
 
@@ -29,7 +29,7 @@ The public browser version is available at [https://volderaxe.github.io/pyro-nav
 - Fresh station trackers begin with zero visited locations (Ruin is the home base, not a counted visit); the overview's visited count reflects unique stops completed in haul runs still in progress
 - Searchable route setup with large, full-row station selectors
 - Overview action to complete the current station as the focused route's next stop
-- Recent-improvements notice and feature request form that prepares an email draft
+- Recent-improvements notice and private in-app feature-request inbox (Cloudflare Worker + D1 setup required)
 - Distance matrix and manually editable distances
 - Browser local-storage persistence, JSON export, and validated backup restore
 
@@ -44,7 +44,7 @@ The public browser version is available at [https://volderaxe.github.io/pyro-nav
 - If a run needs an early cargo drop, select your current station and choose **Pit stop at [delivery station]** in the focused route checklist. This records the partial drop, moves the tracker location to the configured delivery station, and preserves completed stops. Choose **Continue route from [delivery station]** when ready to resume; route stops must still be completed in order.
 - New installs start with zero visited stations; Ruin Station is excluded from the visited/unvisited counters. Previously saved data is preserved, except the old untouched all-visited starter data is migrated to the new zero-visited defaults. Completing a route stop updates station visit status and the live run total; finishing or canceling a run resets its contribution to the overview total.
 - The overview's **Complete current route stop** action is enabled when your selected current station is the focused active route's next stop and its haul run has started.
-- Feature requests open a prefilled message in the visitor's default email app. The visitor reviews and sends the email; the app does not submit requests in the background.
+- Feature requests go to the private Pyro Nav inbox without requiring an account or email when the Cloudflare feedback API is configured. The app does not open an email client, publish requests, or store submitter IP addresses in D1; Cloudflare processes connection metadata for rate limiting. See [`worker/feedback/README.md`](worker/feedback/README.md) for setup and API details. If the API is unavailable, the app reports the failure and keeps the request draft.
 - Distance estimates are community reference values and may be approximate; unknown distances show as unavailable.
 - Data is saved in the current browser profile. Use **Export data** to back up your records.
 - Import a JSON backup from the Station Registry. The app validates it before replacing saved data and reports errors without changing the current records.
@@ -57,3 +57,5 @@ The public browser version is available at [https://volderaxe.github.io/pyro-nav
 - `index.html` — page structure
 - `styles.css` — visual design
 - `app.js` — station data, route logic, and local persistence
+- `feedback-config.js` — public feedback API URL; set it after deploying the Worker
+- `worker/feedback/` — Cloudflare Worker API, D1 migration, tests, and setup instructions

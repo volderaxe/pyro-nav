@@ -1,0 +1,28 @@
+name: Deploy Pyro Nav feedback API
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Apply database migrations and deploy Worker
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          workingDirectory: worker/feedback
+          wranglerVersion: "4"
+          command: deploy
+          preCommands: npx wrangler d1 migrations apply pyro-nav-feedback --remote
+          secrets: |
+            ADMIN_TOKEN
+        env:
+          ADMIN_TOKEN: ${{ secrets.FEEDBACK_ADMIN_TOKEN }}
