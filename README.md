@@ -32,6 +32,7 @@ The public browser version is available at [https://volderaxe.github.io/pyro-nav
 - Recent-improvements notice and private feature-request inbox with GitHub owner sign-in (Cloudflare Worker + D1 setup required)
 - Distance matrix and manually editable distances
 - Browser local-storage persistence, JSON export, and validated backup restore
+- Settings for four interface accent colors and three text sizes, saved separately from station and route data
 
 ## Important notes
 
@@ -47,6 +48,7 @@ The public browser version is available at [https://volderaxe.github.io/pyro-nav
 - Feature requests go to the private Pyro Nav inbox without requiring submitters to create an account or provide an email. The owner signs in with the authorized GitHub account; owner tools include inbox counts, status filters, and marking requests reviewed. The app does not open an email client, publish requests, or store submitter IP addresses in D1; Cloudflare processes connection metadata for rate limiting. See [`worker/feedback/README.md`](worker/feedback/README.md) for setup and API details. If the API is unavailable, the app reports the failure and keeps the request draft.
 - Distance estimates are community reference values and may be approximate; unknown distances show as unavailable.
 - Data is saved in the current browser profile. Use **Export data** to back up your records.
+- Interface appearance settings use a separate versioned browser-storage entry; they are not included in exports or removed when resetting station and route data.
 - Import a JSON backup from the Station Registry. The app validates it before replacing saved data and reports errors without changing the current records.
 - If saved data is malformed or browser storage is unavailable, the app displays a warning and disables writes rather than overwriting existing records with defaults. Use **Export data** for currently readable records, then explicitly reset app data if needed.
 - Ruin Station is a protected home base. Route optimization leaves completed stops fixed, starts from the current or last completed station, and considers the return distance when all required distances are known.

@@ -4,7 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pyro Nav // Station Operations</title>
-<link rel="stylesheet" href="styles.css">
+<script>
+(()=>{const key='pyroUiPreferences',defaults={version:1,accent:'cyan',textSize:'standard'},valid=value=>value&&typeof value==='object'&&!Array.isArray(value)&&value.version===1&&['cyan','amber','violet','mint'].includes(value.accent)&&['small','standard','large'].includes(value.textSize);let preferences=defaults,raw=null;try{raw=localStorage.getItem(key)}catch{window.pyroUiSettingsIssue='Browser storage is unavailable. Interface preferences will not persist in this browser.'}if(raw!==null){try{const saved=JSON.parse(raw);if(valid(saved))preferences={version:1,accent:saved.accent,textSize:saved.textSize};else{window.pyroUiSettingsInvalid=true;window.pyroUiSettingsIssue='Saved interface preferences are invalid or unsupported. Reset preferences to replace them.'}}catch{window.pyroUiSettingsInvalid=true;window.pyroUiSettingsIssue='Saved interface preferences could not be read. Reset preferences to replace them.'}}document.documentElement.dataset.accent=preferences.accent;document.documentElement.dataset.textSize=preferences.textSize;window.pyroUiPreferences=preferences})();
+</script>
+<link rel="stylesheet" href="styles.css?v=settings-v2">
 </head>
 <body>
 <header>
@@ -14,17 +17,21 @@
 <main>
  <aside class="sidebar">
   <div class="navlabel">OPERATIONS</div>
+ <nav class="sidebar-nav" aria-label="Primary navigation">
   <button class="navbtn active" data-page="overview">◈ &nbsp; Overview</button>
   <button class="navbtn" data-page="stations">▦ &nbsp; Stations <span id="navCount">12</span></button>
   <button class="navbtn" data-page="routes">⌁ &nbsp; Route Planner</button>
   <button class="navbtn" data-page="distances">↔ &nbsp; Distance Matrix</button>
-  <div class="sidefoot">PYRO SYSTEM<br><span style="color:var(--cyan)">NAV DATA // LOCAL SAVE</span><br><br>Progress is saved in this browser.</div>
+  <button class="navbtn" data-page="settings">⚙ &nbsp; Settings</button>
+ </nav>
+ <span class="nav-scroll-hint">SCROLL <span aria-hidden="true">→</span> SETTINGS</span>
+ <div class="sidefoot">PYRO SYSTEM<br><span style="color:var(--cyan)">NAV DATA // LOCAL SAVE</span><br><br>Progress is saved in this browser.</div>
  </aside>
  <section class="content">
   <div id="persistenceWarning" class="persistence-warning" role="alert" hidden></div>
   <div id="overviewPage">
    <div class="titleline"><div><div class="eyebrow">Flight operations / Pyro</div><h2>Station Overview</h2><p>Track visits. Find the next stop. Keep your route under control.</p></div><div class="actions"><button onclick="showPage('routes')">Route planner</button><button onclick="openStationModal()">＋ Add Station</button><button class="primary" onclick="openRouteModal()">＋ Create Route</button></div></div>
-   <details class="notice-panel"><summary><span><span class="eyebrow">PILOT NOTICE · CLICK TO VIEW</span><strong>Recent improvements</strong></span><span class="notice-count">5 UPDATES</span></summary><ul><li>Search stations by name while creating a route; click the station name or row to select it.</li><li>Track multiple active routes independently for separate ships.</li><li>Mark the focused route's next stop complete right from the overview when you arrive.</li><li>Choose any station as a route's final delivery and pit-stop location; Ruin remains the default home base.</li><li>New station trackers start at zero visits, and route completions update station visit status.</li></ul></details>
+   <details class="notice-panel"><summary><span><span class="eyebrow">PILOT NOTICE · CLICK TO VIEW</span><strong>Recent improvements</strong></span><span class="notice-count">6 UPDATES</span></summary><ul><li>Search stations by name while creating a route; click the station name or row to select it.</li><li>Track multiple active routes independently for separate ships.</li><li>Mark the focused route's next stop complete right from the overview when you arrive.</li><li>Choose any station as a route's final delivery and pit-stop location; Ruin remains the default home base.</li><li>New station trackers start at zero visits, and route completions update station visit status.</li><li>Personalize the interface accent color and text size from Settings; choices are saved in this browser.</li></ul></details>
    <div class="cards">
     <div class="stat"><label>TOTAL STATIONS</label><strong id="statTotal">12</strong></div>
     <div class="stat"><label>VISITED STATIONS</label><strong class="green" id="statDone">0</strong></div>
@@ -62,6 +69,35 @@
    <div class="titleline"><div><div class="eyebrow">Navigation data / reference</div><h2>Distance Matrix</h2><p>Estimated station-to-station distances from a community Pyro reference table.</p></div><div class="actions"><button onclick="openDistanceModal()">＋ Edit distance</button></div></div>
    <div class="panel"><div class="toolbar"><input id="distanceSearch" placeholder="Filter station..." oninput="renderMatrix()"><span class="muted" style="font-size:11px">Use matrix to compare locations; missing entries can be added manually.</span></div><div id="matrixWrap" style="overflow:auto"></div></div>
   </div>
+  <div id="settingsPage" class="hidden">
+   <div class="titleline"><div><div class="eyebrow">Interface / pilot preferences</div><h2>Settings</h2><p>Adjust your operations console. These preferences stay separate from station and route data.</p></div><div class="actions"><button type="button" onclick="resetUiPreferences()">Reset to defaults</button></div></div>
+   <div class="settings-layout">
+    <div class="panel settings-controls">
+     <fieldset class="settings-group"><legend>INTERFACE ACCENT</legend><p class="settings-description">Choose the highlight color used across controls and navigation.</p><div class="settings-options accent-options">
+      <label class="settings-choice"><input type="radio" name="uiAccent" value="cyan"><span class="choice-content"><span class="accent-swatch swatch-cyan"></span><span><strong>Cyan</strong><small>Pyro default</small></span></span></label>
+      <label class="settings-choice"><input type="radio" name="uiAccent" value="amber"><span class="choice-content"><span class="accent-swatch swatch-amber"></span><span><strong>Amber</strong><small>Flight deck</small></span></span></label>
+      <label class="settings-choice"><input type="radio" name="uiAccent" value="violet"><span class="choice-content"><span class="accent-swatch swatch-violet"></span><span><strong>Violet</strong><small>Deep field</small></span></span></label>
+      <label class="settings-choice"><input type="radio" name="uiAccent" value="mint"><span class="choice-content"><span class="accent-swatch swatch-mint"></span><span><strong>Mint</strong><small>Green signal</small></span></span></label>
+     </div></fieldset>
+     <fieldset class="settings-group"><legend>TEXT SIZE</legend><p class="settings-description">Scale interface text while keeping the layout proportional.</p><div class="settings-options text-options">
+      <label class="settings-choice"><input type="radio" name="uiTextSize" value="small"><span class="choice-content"><strong class="size-sample small-sample">Aa</strong><span><strong>Small</strong><small>90%</small></span></span></label>
+      <label class="settings-choice"><input type="radio" name="uiTextSize" value="standard"><span class="choice-content"><strong class="size-sample">Aa</strong><span><strong>Standard</strong><small>100% · default</small></span></span></label>
+      <label class="settings-choice"><input type="radio" name="uiTextSize" value="large"><span class="choice-content"><strong class="size-sample large-sample">Aa</strong><span><strong>Large</strong><small>115%</small></span></span></label>
+     </div></fieldset>
+     <p id="settingsStatus" class="settings-status" role="status" aria-live="polite"></p>
+    </div>
+    <section class="panel settings-preview-panel" aria-labelledby="settingsPreviewHeading">
+     <div class="panelhead"><h3 id="settingsPreviewHeading">Live preview</h3><span class="tag">SAMPLE CONSOLE</span></div>
+     <div class="settings-preview">
+      <div class="preview-topline"><span class="eyebrow">FLIGHT OPERATIONS / PYRO</span><span class="badge current">CURRENT</span></div>
+      <h3>Ruin Station</h3><p>Interface colors and text sizing update as you make a selection.</p>
+      <div class="preview-readout"><span>NEXT ROUTE STOP</span><strong>Checkmate</strong></div>
+      <button type="button" class="primary">Console action</button>
+     </div>
+     <p class="settings-footnote">Settings are stored locally in this browser and never included in data exports or resets.</p>
+    </section>
+   </div>
+  </div>
  </section>
 </main>
 <footer><span>PYRO NAV // FAN-MADE PERSONAL TRACKER</span><span>Not affiliated with Cloud Imperium Games. Station distance data is community-sourced and may be approximate.</span></footer>
@@ -70,7 +106,7 @@
 <div class="modal" id="distanceModal"><div class="modalbox"><h3>Add or edit distance</h3><p>Enter a distance between two stations. The value is saved locally and used for closest-station suggestions.</p><form id="distanceForm"><div class="field"><label>FROM STATION</label><select id="distanceFrom"></select></div><div class="field"><label>TO STATION</label><select id="distanceTo"></select></div><div class="field"><label>DISTANCE (COMMUNITY UNIT)</label><input id="distanceValue" type="number" min="0" step="0.01" required placeholder="e.g. 27.99"></div><div class="modalactions"><button type="button" onclick="closeModal('distanceModal')">Cancel</button><button class="primary" type="submit">Save distance</button></div></form></div></div>
 <div class="modal" id="featureRequestModal"><div class="modalbox feedback-modal" role="dialog" aria-modal="true" aria-labelledby="featureRequestHeading"><div id="requestView"><h3 id="featureRequestHeading">Request an improvement</h3><p>Send a request directly to the Pyro Nav owner. Your station and route data are not included. No account or email is required.</p><form id="featureRequestForm" onsubmit="sendFeatureRequest(event)"><div class="field"><label for="featureRequestTitle">REQUEST TITLE</label><input id="featureRequestTitle" required maxlength="100" autocomplete="off" placeholder="What would you like improved?"></div><div class="field"><label for="featureRequestDetails">DETAILS</label><textarea id="featureRequestDetails" required maxlength="3000" rows="5" placeholder="Describe the feature or improvement and how it would help..."></textarea></div><p class="feedback-privacy">PRIVATE TO THE APP OWNER · APP DOES NOT STORE YOUR IP ADDRESS</p><p id="featureRequestStatus" class="feedback-status" role="status" aria-live="polite" hidden></p><div class="modalactions feedback-actions"><button type="button" onclick="closeModal('featureRequestModal')">Cancel</button><button type="button" class="owner-link" onclick="showOwnerInbox()">Owner inbox</button><button id="featureRequestSubmit" class="primary" type="submit">Send request</button></div></form></div><section id="ownerInboxView" hidden><div class="inbox-heading"><div><div class="eyebrow">PRIVATE / OWNER ACCESS</div><h3>Request inbox</h3></div><button type="button" class="owner-link" onclick="showRequestForm()">Back to request form</button></div><p>Enter the owner token to unlock private requests. The token stays in memory only while this panel is open.</p><form id="ownerLoginForm" onsubmit="unlockOwnerInbox(event)"><div class="field"><label for="ownerToken">OWNER TOKEN</label><input id="ownerToken" type="password" autocomplete="off" required></div><div class="modalactions inbox-controls"><button type="button" onclick="closeModal('featureRequestModal')">Close</button><button id="ownerUnlockButton" class="primary" type="submit">Unlock inbox</button></div></form><div class="inbox-toolbar"><p id="ownerInboxStatus" role="status" aria-live="polite" hidden></p><button id="ownerInboxRefresh" type="button" onclick="loadOwnerRequests()" hidden>Refresh</button></div><div id="ownerRequests" class="request-list" aria-live="polite"></div></section></div></div>
 <script src="feedback-config.js?v=1"></script>
-<script src="app.js?v=owner-auth-v1"></script>
+<script src="app.js?v=settings-v1"></script>
 <script src="owner-access.js?v=owner-auth-v1"></script>
 </body>
 </html>
